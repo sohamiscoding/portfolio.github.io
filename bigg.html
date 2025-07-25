@@ -1,0 +1,1412 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cybersoham | Digital Investigator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: #0a0a0a;
+            overflow-x: hidden;
+        }
+        
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        /* Matrix Background */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        /* Navigation */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00ff41;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Page Sections */
+        .page-section {
+            display: none;
+        }
+        
+        .page-section.active {
+            display: block;
+        }
+        
+        /* Glitch Effect */
+        .glitch {
+            position: relative;
+            color: #00ff41;
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            animation: glitch 2s infinite;
+        }
+        
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            animation: glitch-1 0.5s infinite;
+            color: #ff0080;
+            z-index: -1;
+        }
+        
+        .glitch::after {
+            animation: glitch-2 0.5s infinite;
+            color: #00ffff;
+            z-index: -2;
+        }
+        
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+        
+        @keyframes glitch-1 {
+            0%, 100% { transform: translate(0); }
+            10% { transform: translate(-2px, -2px); }
+            20% { transform: translate(2px, 2px); }
+        }
+        
+        @keyframes glitch-2 {
+            0%, 100% { transform: translate(0); }
+            30% { transform: translate(2px, -2px); }
+            40% { transform: translate(-2px, 2px); }
+        }
+        
+        /* Typewriter Effect */
+        .typewriter {
+            border-right: 2px solid #00ff41;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+        
+        /* Neon Glow */
+        .neon-glow {
+            box-shadow: 0 0 20px #00ff41, 0 0 40px #00ff41, 0 0 60px #00ff41;
+            border: 1px solid #00ff41;
+        }
+        
+        .neon-purple {
+            box-shadow: 0 0 20px #8b5cf6, 0 0 40px #8b5cf6;
+            border: 1px solid #8b5cf6;
+        }
+        
+        .neon-red {
+            box-shadow: 0 0 20px #ff0040, 0 0 40px #ff0040;
+            border: 1px solid #ff0040;
+        }
+        
+        /* Skill Bars */
+        .skill-bar {
+            height: 8px;
+            background: #1a1a1a;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff41, #00ffff);
+            border-radius: 4px;
+            position: relative;
+            animation: skill-load 2s ease-out;
+        }
+        
+        @keyframes skill-load {
+            from { width: 0%; }
+        }
+        
+        /* Terminal Styling */
+        .terminal {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ff41;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+        
+        .terminal-line {
+            margin: 10px 0;
+            color: #00ff41;
+        }
+        
+        .cursor::after {
+            content: '_';
+            animation: blink 1s infinite;
+            color: #00ff41;
+        }
+        
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Hover Effects */
+        .hover-glow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        /* Game Styles */
+        .game-board {
+            display: grid;
+            gap: 2px;
+            background: #00ff41;
+            padding: 2px;
+            border-radius: 8px;
+        }
+        
+        .game-cell {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .game-cell:hover {
+            background: #00ff41;
+            color: #000;
+        }
+        
+        /* Timeline */
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: #00ff41;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff41;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 12px;
+            width: 2px;
+            height: calc(100% + 18px);
+            background: linear-gradient(to bottom, #00ff41, transparent);
+        }
+        
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Blog Card Hover */
+        .blog-card:hover {
+            transform: rotateY(5deg) rotateX(5deg);
+            box-shadow: 0 20px 40px rgba(0, 255, 65, 0.2);
+        }
+        
+        /* Vision Card Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-black text-green-400">
+    <!-- Matrix Background Canvas -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass backdrop-blur-lg border-b border-green-400/20">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="orbitron text-2xl font-bold text-green-400">
+                    <span class="glitch" data-text="cybersoham">cybersoham</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#" class="nav-link" onclick="showPage('home')">Home</a>
+                    <a href="#" class="nav-link" onclick="showPage('about')">About</a>
+                    <a href="#" class="nav-link" onclick="showPage('skills')">Skills</a>
+                    <a href="#" class="nav-link" onclick="showPage('projects')">Projects</a>
+                    <a href="#" class="nav-link" onclick="showPage('games')">Games</a>
+                    <a href="#" class="nav-link" onclick="showPage('vision')">Vision</a>
+                    <a href="#" class="nav-link" onclick="showPage('blog')">Blog</a>
+                    <a href="#" class="nav-link" onclick="showPage('contact')">Contact</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-green-400">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2">
+                <a href="#" class="block nav-link py-2" onclick="showPage('home')">Home</a>
+                <a href="#" class="block nav-link py-2" onclick="showPage('about')">About</a>
+                <a href="#" class="block nav-link py-2" onclick="showPage('skills')">Skills</a>
+                <a href="#" class="block nav-link py-2" onclick="showPage('projects')">Projects</a>
+                <a href="#" class="block nav-link py-2" onclick="showPage('games')">Games</a>
+                <a href="#" class="block nav-link py-2" onclick="showPage('vision')">Vision</a>
+                <a href="#" class="block nav-link py-2" onclick="showPage('blog')">Blog</a>
+                <a href="#" class="block nav-link py-2" onclick="showPage('contact')">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HOME PAGE -->
+    <section id="home-page" class="page-section active">
+        <!-- Hero Section -->
+        <div id="hero" class="min-h-screen flex items-center justify-center relative pt-20">
+            <div class="text-center z-10">
+                <h1 class="orbitron text-6xl md:text-8xl font-black text-white mb-4">
+                    Hi, I'm <span class="text-purple-400">Soham Vyas</span>
+                </h1>
+                <div class="text-2xl md:text-4xl mb-6 h-16 flex items-center justify-center">
+                    <span id="typewriter" class="typewriter text-green-400"></span>
+                </div>
+                <div class="mb-8">
+                    <span class="glitch text-4xl" data-text="cybersoham">cybersoham</span>
+                </div>
+                <div class="flex flex-col md:flex-row gap-4 justify-center">
+                    <button onclick="showPage('about')" class="neon-glow bg-transparent px-8 py-4 rounded-lg text-xl font-bold hover:bg-green-400 hover:text-black transition-all duration-300">
+                        Explore My Mind
+                    </button>
+                    <button onclick="showPage('games')" class="neon-purple bg-transparent px-8 py-4 rounded-lg text-xl font-bold hover:bg-purple-400 hover:text-black transition-all duration-300">
+                        Play Cyber Games
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="py-20 bg-gradient-to-r from-black via-gray-900 to-black">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-4 gap-8 text-center">
+                    <div class="glass neon-glow p-6 rounded-lg">
+                        <div class="text-4xl font-bold text-green-400 mb-2">2+</div>
+                        <div class="text-lg">Years Experience</div>
+                    </div>
+                    <div class="glass neon-purple p-6 rounded-lg">
+                        <div class="text-4xl font-bold text-purple-400 mb-2">50+</div>
+                        <div class="text-lg">Security Audits</div>
+                    </div>
+                    <div class="glass p-6 rounded-lg" style="border-color: #00ffff;">
+                        <div class="text-4xl font-bold text-cyan-400 mb-2">100+</div>
+                        <div class="text-lg">Vulnerabilities Found</div>
+                    </div>
+                    <div class="glass neon-red p-6 rounded-lg">
+                        <div class="text-4xl font-bold text-red-400 mb-2">24/7</div>
+                        <div class="text-lg">Threat Monitoring</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT PAGE -->
+    <section id="about-page" class="page-section">
+        <div class="min-h-screen flex items-center justify-center py-20 pt-32">
+            <div class="container mx-auto px-6">
+                <h2 class="orbitron text-5xl font-bold text-center mb-16 text-purple-400">About Me</h2>
+                <div class="max-w-4xl mx-auto glass neon-purple rounded-lg p-8 mb-12">
+                    <p class="text-xl leading-relaxed mb-8">
+                        cybersoham is a seeker of digital truths, a guardian of the cyber realm, and an architect of artificial minds. 
+                        Armed with a B.Sc from IIT Jodhpur, he navigates the shadows of the internet, hunting vulnerabilities and 
+                        crafting intelligent systems. His passion lies in the intersection of cybersecurity and AI, where he breaks 
+                        systems to understand them better, then builds them stronger. A digital investigator by day, an open-source 
+                        intelligence gatherer by night, he believes that knowledge should be free and security should be unbreakable.
+                    </p>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <i class="fas fa-graduation-cap text-3xl text-green-400 mb-2"></i>
+                            <h3 class="orbitron font-bold">Education</h3>
+                            <p>B.Sc from IIT Jodhpur</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-shield-alt text-3xl text-purple-400 mb-2"></i>
+                            <h3 class="orbitron font-bold">Passion</h3>
+                            <p>AI & Cybersecurity</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-search text-3xl text-cyan-400 mb-2"></i>
+                            <h3 class="orbitron font-bold">Specialty</h3>
+                            <p>OSINT & Digital Forensics</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Journey Timeline -->
+                <div class="max-w-4xl mx-auto">
+                    <h3 class="orbitron text-3xl font-bold text-center mb-12 text-green-400">My Journey</h3>
+                    <div class="space-y-6">
+                        <div class="timeline-item">
+                            <div class="glass rounded-lg p-6">
+                                <h4 class="orbitron text-xl font-bold text-purple-400 mb-2">2020 - Started Cybersecurity Journey</h4>
+                                <p>Discovered the world of ethical hacking and began learning penetration testing methodologies.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="glass rounded-lg p-6">
+                                <h4 class="orbitron text-xl font-bold text-green-400 mb-2">2025 - IIT Jodhpur</h4>
+                                <p>Enrolled in B.Tech program, focusing on Computer Science and cybersecurity research.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="glass rounded-lg p-6">
+                                <!-- <h4 class="orbitron text-xl font-bold text-cyan-400 mb-2">2022 - AI Integration</h4> -->
+                                <p>Started exploring AI applications in cybersecurity, building ML models for threat detection.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="glass rounded-lg p-6">
+                                <!-- <h4 class="orbitron text-xl font-bold text-red-400 mb-2">2023 - Digital Investigator</h4> -->
+                                <p>Became proficient in OSINT techniques and digital forensics, helping solve complex cases.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="glass rounded-lg p-6">
+                                <!-- <h4 class="orbitron text-xl font-bold text-purple-400 mb-2">2024 - Present</h4> -->
+                                <p>Leading cybersecurity initiatives and developing advanced AI-powered security solutions.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SKILLS PAGE -->
+    <section id="skills-page" class="page-section">
+        <div class="min-h-screen flex items-center justify-center py-20 pt-32">
+            <div class="container mx-auto px-6">
+                <h2 class="orbitron text-5xl font-bold text-center mb-16 text-green-400">Skills Matrix</h2>
+                <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
+                    <div class="glass rounded-lg p-6">
+                        <h3 class="orbitron text-2xl font-bold mb-6 text-purple-400">Programming</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Python</span>
+                                    <span>95%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Bash</span>
+                                    <span>90%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>C/C++</span>
+                                    <span>85%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>JavaScript</span>
+                                    <span>80%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass rounded-lg p-6">
+                        <h3 class="orbitron text-2xl font-bold mb-6 text-cyan-400">Security Tools</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Nmap</span>
+                                    <span>95%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Burp Suite</span>
+                                    <span>88%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 88%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Metasploit</span>
+                                    <span>82%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 82%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Wireshark</span>
+                                    <span>90%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 90%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass rounded-lg p-6">
+                        <h3 class="orbitron text-2xl font-bold mb-6 text-green-400">AI & ML</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Machine Learning</span>
+                                    <span>92%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 92%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>LLMs</span>
+                                    <span>87%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 87%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>LangChain</span>
+                                    <span>85%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>TensorFlow</span>
+                                    <span>83%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 83%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass rounded-lg p-6">
+                        <h3 class="orbitron text-2xl font-bold mb-6 text-purple-400">DevOps & Tools</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Git</span>
+                                    <span>95%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Linux</span>
+                                    <span>93%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 93%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Docker</span>
+                                    <span>85%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>REST APIs</span>
+                                    <span>88%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 88%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS PAGE -->
+    <section id="projects-page" class="page-section">
+        <div class="min-h-screen py-20 pt-32">
+            <div class="container mx-auto px-6">
+                <h2 class="orbitron text-5xl font-bold text-center mb-16 text-cyan-400">Projects</h2>
+                <div class="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="glass neon-glow rounded-lg p-6 hover-glow cursor-pointer">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="orbitron text-xl font-bold text-green-400">AI Threat Hunter</h3>
+                            <a href="#" class="text-purple-400 hover:text-white">
+                                <i class="fab fa-github text-2xl"></i>
+                            </a>
+                        </div>
+                        <p class="mb-4">ML-powered cybersecurity threat detection system</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-green-800 px-2 py-1 rounded text-xs">Python</span>
+                            <span class="bg-purple-800 px-2 py-1 rounded text-xs">TensorFlow</span>
+                            <span class="bg-cyan-800 px-2 py-1 rounded text-xs">Scikit-learn</span>
+                        </div>
+                    </div>
+                    <div class="glass neon-purple rounded-lg p-6 hover-glow cursor-pointer">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="orbitron text-xl font-bold text-purple-400">OSINT Framework</h3>
+                            <a href="#" class="text-green-400 hover:text-white">
+                                <i class="fab fa-github text-2xl"></i>
+                            </a>
+                        </div>
+                        <p class="mb-4">Automated open-source intelligence gathering toolkit</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-green-800 px-2 py-1 rounded text-xs">Python</span>
+                            <span class="bg-purple-800 px-2 py-1 rounded text-xs">BeautifulSoup</span>
+                            <span class="bg-cyan-800 px-2 py-1 rounded text-xs">Requests</span>
+                        </div>
+                    </div>
+                    <div class="glass rounded-lg p-6 hover-glow cursor-pointer" style="border-color: #00ffff;">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="orbitron text-xl font-bold text-cyan-400">Vulnerability Scanner</h3>
+                            <a href="#" class="text-purple-400 hover:text-white">
+                                <i class="fab fa-github text-2xl"></i>
+                            </a>
+                        </div>
+                        <p class="mb-4">Automated web application security assessment tool</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-green-800 px-2 py-1 rounded text-xs">Python</span>
+                            <span class="bg-purple-800 px-2 py-1 rounded text-xs">Nmap</span>
+                            <span class="bg-cyan-800 px-2 py-1 rounded text-xs">Bash</span>
+                        </div>
+                    </div>
+                    <div class="glass neon-glow rounded-lg p-6 hover-glow cursor-pointer">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="orbitron text-xl font-bold text-green-400">LLM Security Audit</h3>
+                            <a href="#" class="text-purple-400 hover:text-white">
+                                <i class="fab fa-github text-2xl"></i>
+                            </a>
+                        </div>
+                        <p class="mb-4">Security assessment framework for LLM applications</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-green-800 px-2 py-1 rounded text-xs">Python</span>
+                            <span class="bg-purple-800 px-2 py-1 rounded text-xs">LangChain</span>
+                            <span class="bg-cyan-800 px-2 py-1 rounded text-xs">OpenAI</span>
+                        </div>
+                    </div>
+                    <div class="glass neon-red rounded-lg p-6 hover-glow cursor-pointer">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="orbitron text-xl font-bold text-red-400">Network Forensics Tool</h3>
+                            <a href="#" class="text-green-400 hover:text-white">
+                                <i class="fab fa-github text-2xl"></i>
+                            </a>
+                        </div>
+                        <p class="mb-4">Advanced packet analysis and intrusion detection</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-green-800 px-2 py-1 rounded text-xs">Python</span>
+                            <span class="bg-purple-800 px-2 py-1 rounded text-xs">Scapy</span>
+                            <span class="bg-cyan-800 px-2 py-1 rounded text-xs">Wireshark</span>
+                        </div>
+                    </div>
+                    <div class="glass rounded-lg p-6 hover-glow cursor-pointer" style="border-color: #ff0080;">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="orbitron text-xl font-bold" style="color: #ff0080;">Blockchain Security</h3>
+                            <a href="#" class="text-purple-400 hover:text-white">
+                                <i class="fab fa-github text-2xl"></i>
+                            </a>
+                        </div>
+                        <p class="mb-4">Smart contract vulnerability scanner and auditor</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-green-800 px-2 py-1 rounded text-xs">Solidity</span>
+                            <span class="bg-purple-800 px-2 py-1 rounded text-xs">Web3</span>
+                            <span class="bg-cyan-800 px-2 py-1 rounded text-xs">Mythril</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GAMES PAGE -->
+    <section id="games-page" class="page-section">
+        <div class="min-h-screen py-20 pt-32">
+            <div class="container mx-auto px-6">
+                <h2 class="orbitron text-5xl font-bold text-center mb-16 text-purple-400">Cyber Security Games</h2>
+                <div class="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Password Cracker Game -->
+                    <div class="glass neon-glow rounded-lg p-6">
+                        <h3 class="orbitron text-2xl font-bold text-green-400 mb-4">Password Cracker</h3>
+                        <p class="mb-4">Crack the encrypted password using various techniques!</p>
+                        <div id="password-game" class="mb-4">
+                            <div class="terminal p-4 rounded">
+                                <div class="terminal-line">Target: <span id="encrypted-password" class="text-red-400">5d41402abc4b2a76b9719d911017c592</span></div>
+                                <div class="terminal-line">Hint: Common 5-letter word (MD5)</div>
+                                <input type="text" id="password-guess" class="w-full bg-transparent border-b-2 border-green-400 py-2 mt-2" placeholder="Enter your guess...">
+                            </div>
+                        </div>
+                        <button onclick="checkPassword()" class="neon-glow bg-transparent px-4 py-2 rounded hover:bg-green-400 hover:text-black transition-all">
+                            Crack It!
+                        </button>
+                        <div id="password-result" class="mt-2"></div>
+                    </div>
+
+                    <!-- Network Scanner Game -->
+                    <div class="glass neon-purple rounded-lg p-6">
+                        <h3 class="orbitron text-2xl font-bold text-purple-400 mb-4">Network Scanner</h3>
+                        <p class="mb-4">Find open ports on the target system!</p>
+                        <div id="network-game" class="mb-4">
+                            <div class="terminal p-4 rounded">
+                                <div class="terminal-line">Target IP: 192.168.1.100</div>
+                                <div class="terminal-line">Scanning ports...</div>
+                                <div id="port-results" class="mt-2"></div>
+                            </div>
+                        </div>
+                        <button onclick="scanPorts()" class="neon-purple bg-transparent px-4 py-2 rounded hover:bg-purple-400 hover:text-black transition-all">
+                            Start Scan
+                        </button>
+                    </div>
+
+                    <!-- Cipher Decoder Game -->
+                    <div class="glass rounded-lg p-6" style="border-color: #00ffff;">
+                        <h3 class="orbitron text-2xl font-bold text-cyan-400 mb-4">Cipher Decoder</h3>
+                        <p class="mb-4">Decode the secret message!</p>
+                        <div id="cipher-game" class="mb-4">
+                            <div class="terminal p-4 rounded">
+                                <div class="terminal-line">Encrypted: <span id="cipher-text" class="text-cyan-400">KHOOR ZRUOG</span></div>
+                                <div class="terminal-line">Cipher: Caesar (shift 3)</div>
+                                <input type="text" id="cipher-guess" class="w-full bg-transparent border-b-2 border-cyan-400 py-2 mt-2" placeholder="Decoded message...">
+                            </div>
+                        </div>
+                        <button onclick="checkCipher()" class="bg-transparent px-4 py-2 rounded border border-cyan-400 hover:bg-cyan-400 hover:text-black transition-all">
+                            Decode
+                        </button>
+                        <div id="cipher-result" class="mt-2"></div>
+                    </div>
+
+                    <!-- Memory Hacking Game -->
+                    <div class="glass neon-red rounded-lg p-6">
+                        <h3 class="orbitron text-2xl font-bold text-red-400 mb-4">Memory Hack</h3>
+                        <p class="mb-4">Remember the sequence to hack the system!</p>
+                        <div id="memory-game" class="mb-4">
+                            <div class="grid grid-cols-4 gap-2 game-board w-64 mx-auto">
+                                <div class="game-cell w-12 h-12 flex items-center justify-center text-2xl" onclick="memoryClick(0)"></div>
+                                <div class="game-cell w-12 h-12 flex items-center justify-center text-2xl" onclick="memoryClick(1)"></div>
+                                <div class="game-cell w-12 h-12 flex items-center justify-center text-2xl" onclick="memoryClick(2)"></div>
+                                <div class="game-cell w-12 h-12 flex items-center justify-center text-2xl" onclick="memoryClick(3)"></div>
+                                <div class="game-cell w-12 h-12 flex items-center justify-center text-2xl" onclick="memoryClick(4)"></div>
+                                <div class="game-cell w-12 h-12 flex items-center justify-center text-2xl" onclick="memoryClick(5)"></div>
+                                <div class="game-cell w-12 h-12 flex items-center justify-center text-2xl" onclick="memoryClick(6)"></div>
+                                <div class="game-cell w-12 h-12 flex items-center justify-center text-2xl" onclick="memoryClick(7)"></div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <div>Level: <span id="memory-level">1</span></div>
+                                <div>Score: <span id="memory-score">0</span></div>
+                            </div>
+                        </div>
+                        <button onclick="startMemoryGame()" class="neon-red bg-transparent px-4 py-2 rounded hover:bg-red-400 hover:text-black transition-all">
+                            Start Hack
+                        </button>
+                    </div>
+
+                    <!-- Binary Converter Game -->
+                    <div class="glass neon-glow rounded-lg p-6">
+                        <h3 class="orbitron text-2xl font-bold text-green-400 mb-4">Binary Converter</h3>
+                        <p class="mb-4">Convert binary to text to reveal the message!</p>
+                        <div id="binary-game" class="mb-4">
+                            <div class="terminal p-4 rounded">
+                                <div class="terminal-line">Binary: <span id="binary-text" class="text-green-400">01001000 01100101 01101100 01101100 01101111</span></div>
+                                <input type="text" id="binary-guess" class="w-full bg-transparent border-b-2 border-green-400 py-2 mt-2" placeholder="Converted text...">
+                            </div>
+                        </div>
+                        <button onclick="checkBinary()" class="neon-glow bg-transparent px-4 py-2 rounded hover:bg-green-400 hover:text-black transition-all">
+                            Convert
+                        </button>
+                        <div id="binary-result" class="mt-2"></div>
+                    </div>
+
+                    <!-- SQL Injection Game -->
+                    <div class="glass rounded-lg p-6" style="border-color: #ff0080;">
+                        <h3 class="orbitron text-2xl font-bold" style="color: #ff0080;" class="mb-4">SQL Injection</h3>
+                        <p class="mb-4">Find the SQL injection vulnerability!</p>
+                        <div id="sql-game" class="mb-4">
+                            <div class="terminal p-4 rounded">
+                                <div class="terminal-line">Login Form Detected</div>
+                                <div class="terminal-line">Target: admin panel</div>
+                                <input type="text" id="sql-payload" class="w-full bg-transparent border-b-2 py-2 mt-2" style="border-color: #ff0080;" placeholder="Enter SQL payload...">
+                            </div>
+                        </div>
+                        <button onclick="checkSQL()" class="bg-transparent px-4 py-2 rounded border hover:text-black transition-all" style="border-color: #ff0080; color: #ff0080;" onmouseover="this.style.backgroundColor='#ff0080'" onmouseout="this.style.backgroundColor='transparent'">
+                            Execute
+                        </button>
+                        <div id="sql-result" class="mt-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VISION PAGE -->
+    <section id="vision-page" class="page-section">
+        <div class="min-h-screen py-20 pt-32">
+            <div class="container mx-auto px-6">
+                <h2 class="orbitron text-5xl font-bold text-center mb-16 text-green-400">My Vision</h2>
+                
+                <!-- Mission Statement -->
+                <div class="max-w-4xl mx-auto glass neon-glow rounded-lg p-8 mb-12 floating">
+                    <h3 class="orbitron text-3xl font-bold text-center mb-6 text-purple-400">Securing the Digital Future</h3>
+                    <p class="text-xl leading-relaxed text-center">
+                        "In a world where digital threats evolve at the speed of light, I envision a future where 
+                        artificial intelligence and human expertise unite to create an impenetrable shield against 
+                        cyber attacks. My mission is to democratize cybersecurity knowledge, making advanced protection 
+                        accessible to everyone, from individual users to global enterprises."
+                    </p>
+                </div>
+
+                <!-- Vision Cards -->
+                <div class="grid md:grid-cols-3 gap-8 mb-12">
+                    <div class="glass neon-purple rounded-lg p-6 text-center">
+                        <div class="text-5xl mb-4">🛡️</div>
+                        <h4 class="orbitron text-xl font-bold mb-3 text-purple-400">Proactive Defense</h4>
+                        <p>Building AI systems that predict and prevent cyber attacks before they happen, not just respond after damage is done.</p>
+                    </div>
+                    <div class="glass rounded-lg p-6 text-center" style="border-color: #00ffff;">
+                        <div class="text-5xl mb-4">🌐</div>
+                        <h4 class="orbitron text-xl font-bold mb-3 text-cyan-400">Global Collaboration</h4>
+                        <p>Creating open-source security tools and fostering a community where cybersecurity knowledge is shared freely.</p>
+                    </div>
+                    <div class="glass neon-glow rounded-lg p-6 text-center">
+                        <div class="text-5xl mb-4">🧠</div>
+                        <h4 class="orbitron text-xl font-bold mb-3 text-green-400">AI-Powered Security</h4>
+                        <p>Developing intelligent systems that learn from threats and adapt defenses in real-time, staying ahead of adversaries.</p>
+                    </div>
+                </div>
+
+                <!-- Why Cybersecurity -->
+                <div class="max-w-4xl mx-auto glass neon-red rounded-lg p-8 mb-12">
+                    <h3 class="orbitron text-3xl font-bold text-center mb-6 text-red-400">Why Cybersecurity Matters</h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="orbitron text-xl font-bold mb-3 text-green-400">The Digital Revolution</h4>
+                            <p class="mb-4">
+                                We live in an interconnected world where our entire lives are digital. From banking 
+                                to healthcare, from communication to entertainment - everything depends on secure 
+                                digital infrastructure. A single breach can affect millions of lives.
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="orbitron text-xl font-bold mb-3 text-purple-400">The Human Element</h4>
+                            <p class="mb-4">
+                                Technology is only as strong as the people behind it. My goal is to bridge the gap 
+                                between complex security concepts and practical implementation, making cybersecurity 
+                                accessible to everyone, not just experts.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Future Goals -->
+                <div class="max-w-4xl mx-auto">
+                    <h3 class="orbitron text-3xl font-bold text-center mb-8 text-cyan-400">Future Goals</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-green-400 rounded-full flex items-center justify-center text-black font-bold">1</div>
+                            <div class="glass rounded-lg p-4 flex-1">
+                                <h4 class="orbitron font-bold text-green-400 mb-2">Launch AI Security Platform</h4>
+                                <p>Develop a comprehensive AI-powered cybersecurity platform that provides real-time threat detection and automated response capabilities.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-purple-400 rounded-full flex items-center justify-center text-black font-bold">2</div>
+                            <div class="glass rounded-lg p-4 flex-1">
+                                <h4 class="orbitron font-bold text-purple-400 mb-2">Cybersecurity Education Initiative</h4>
+                                <p>Create free educational resources and courses to train the next generation of cybersecurity professionals, especially in underserved communities.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-cyan-400 rounded-full flex items-center justify-center text-black font-bold">3</div>
+                            <div class="glass rounded-lg p-4 flex-1">
+                                <h4 class="orbitron font-bold text-cyan-400 mb-2">Open Source Security Framework</h4>
+                                <p>Build and maintain open-source security tools that can be used by organizations worldwide, regardless of their budget or size.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-red-400 rounded-full flex items-center justify-center text-black font-bold">4</div>
+                            <div class="glass rounded-lg p-4 flex-1">
+                                <h4 class="orbitron font-bold text-red-400 mb-2">Global Security Research Lab</h4>
+                                <p>Establish a research laboratory focused on emerging threats, quantum cryptography, and the intersection of AI and cybersecurity.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOG PAGE -->
+    <section id="blog-page" class="page-section">
+        <div class="min-h-screen py-20 pt-32">
+            <div class="container mx-auto px-6">
+                <h2 class="orbitron text-5xl font-bold text-center mb-16 text-purple-400">Security Blog</h2>
+                <div class="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <article class="glass neon-glow rounded-lg p-6 blog-card transition-all duration-300">
+                        <div class="mb-4">
+                            <span class="text-sm text-green-400">Jan 15, 2024</span>
+                            <h3 class="orbitron text-xl font-bold text-white mt-2 mb-3">AI in Cybersecurity: The Future is Now</h3>
+                        </div>
+                        <p class="mb-4">Exploring how machine learning algorithms are revolutionizing threat detection and response in modern cybersecurity frameworks...</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-purple-400">#AI #MachineLearning</span>
+                            <button class="text-green-400 hover:text-white">Read More →</button>
+                        </div>
+                    </article>
+
+                    <article class="glass neon-purple rounded-lg p-6 blog-card transition-all duration-300">
+                        <div class="mb-4">
+                            <span class="text-sm text-purple-400">Jan 10, 2024</span>
+                            <h3 class="orbitron text-xl font-bold text-white mt-2 mb-3">OSINT Techniques for Digital Investigators</h3>
+                        </div>
+                        <p class="mb-4">A comprehensive guide to open-source intelligence gathering methods used by cybersecurity professionals and digital forensics experts...</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-cyan-400">#OSINT #DigitalForensics</span>
+                            <button class="text-purple-400 hover:text-white">Read More →</button>
+                        </div>
+                    </article>
+
+                    <article class="glass rounded-lg p-6 blog-card transition-all duration-300" style="border-color: #00ffff;">
+                        <div class="mb-4">
+                            <span class="text-sm text-cyan-400">Jan 5, 2024</span>
+                            <h3 class="orbitron text-xl font-bold text-white mt-2 mb-3">Zero-Day Vulnerabilities: Prevention Strategies</h3>
+                        </div>
+                        <p class="mb-4">Understanding zero-day exploits and implementing proactive security measures to protect against unknown vulnerabilities...</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-green-400">#ZeroDay #Security</span>
+                            <button class="text-cyan-400 hover:text-white">Read More →</button>
+                        </div>
+                    </article>
+
+                    <article class="glass neon-red rounded-lg p-6 blog-card transition-all duration-300">
+                        <div class="mb-4">
+                            <span class="text-sm text-red-400">Dec 28, 2023</span>
+                            <h3 class="orbitron text-xl font-bold text-white mt-2 mb-3">The Evolution of Ransomware</h3>
+                        </div>
+                        <p class="mb-4">Analyzing the latest ransomware trends and developing effective defense strategies against increasingly sophisticated attacks...</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-purple-400">#Ransomware #ThreatAnalysis</span>
+                            <button class="text-red-400 hover:text-white">Read More →</button>
+                        </div>
+                    </article>
+
+                    <article class="glass rounded-lg p-6 blog-card transition-all duration-300" style="border-color: #ff0080;">
+                        <div class="mb-4">
+                            <span class="text-sm" style="color: #ff0080;">Dec 20, 2023</span>
+                            <h3 class="orbitron text-xl font-bold text-white mt-2 mb-3">Blockchain Security Auditing</h3>
+                        </div>
+                        <p class="mb-4">Deep dive into smart contract vulnerabilities and security best practices for blockchain-based applications...</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-cyan-400">#Blockchain #SmartContracts</span>
+                            <button style="color: #ff0080;" class="hover:text-white">Read More →</button>
+                        </div>
+                    </article>
+
+                    <article class="glass neon-glow rounded-lg p-6 blog-card transition-all duration-300">
+                        <div class="mb-4">
+                            <span class="text-sm text-green-400">Dec 15, 2023</span>
+                            <h3 class="orbitron text-xl font-bold text-white mt-2 mb-3">Building Secure AI Systems</h3>
+                        </div>
+                        <p class="mb-4">Essential security considerations when developing and deploying AI models in production environments...</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-purple-400">#AISecuirty #MLOps</span>
+                            <button class="text-green-400 hover:text-white">Read More →</button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Newsletter Signup -->
+                <div class="max-w-2xl mx-auto mt-16 glass neon-purple rounded-lg p-8 text-center">
+                    <h3 class="orbitron text-2xl font-bold mb-4 text-purple-400">Stay Updated</h3>
+                    <p class="mb-6">Subscribe to get the latest cybersecurity insights and threat intelligence delivered to your inbox.</p>
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <input type="email" placeholder="Enter your email" class="flex-1 bg-transparent border-b-2 border-purple-400 py-3 px-0 text-white focus:outline-none focus:border-green-400">
+                        <button class="neon-purple bg-transparent px-6 py-3 rounded hover:bg-purple-400 hover:text-black transition-all">
+                            Subscribe
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT PAGE -->
+    <section id="contact-page" class="page-section">
+        <div class="min-h-screen flex items-center justify-center py-20 pt-32">
+            <div class="container mx-auto px-6">
+                <h2 class="orbitron text-5xl font-bold text-center mb-16 text-purple-400">Contact Me</h2>
+                <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12">
+                    
+                    <!-- Contact Form -->
+                    <div class="glass neon-purple rounded-lg p-8">
+                        <h3 class="orbitron text-2xl font-bold mb-6 text-green-400">Send a Message</h3>
+                        <form class="space-y-6">
+                            <div class="relative">
+                                <input type="text" id="name" class="w-full bg-transparent border-b-2 border-green-400 py-3 px-0 text-white placeholder-transparent focus:outline-none focus:border-purple-400 peer" placeholder="Name" required>
+                                <label for="name" class="absolute left-0 -top-3.5 text-green-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-purple-400 peer-focus:text-sm">Your Name</label>
+                            </div>
+                            <div class="relative">
+                                <input type="email" id="email" class="w-full bg-transparent border-b-2 border-green-400 py-3 px-0 text-white placeholder-transparent focus:outline-none focus:border-purple-400 peer" placeholder="Email" required>
+                                <label for="email" class="absolute left-0 -top-3.5 text-green-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-purple-400 peer-focus:text-sm">Your Email</label>
+                            </div>
+                            <div class="relative">
+                                <select id="subject" class="w-full bg-transparent border-b-2 border-green-400 py-3 px-0 text-white focus:outline-none focus:border-purple-400">
+                                    <option value="" class="bg-black">Select Subject</option>
+                                    <option value="collaboration" class="bg-black">Collaboration</option>
+                                    <option value="consultation" class="bg-black">Security Consultation</option>
+                                    <option value="speaking" class="bg-black">Speaking Engagement</option>
+                                    <option value="other" class="bg-black">Other</option>
+                                </select>
+                            </div>
+                            <div class="relative">
+                                <textarea id="message" rows="5" class="w-full bg-transparent border-b-2 border-green-400 py-3 px-0 text-white placeholder-transparent focus:outline-none focus:border-purple-400 resize-none peer" placeholder="Message" required></textarea>
+                                <label for="message" class="absolute left-0 -top-3.5 text-green-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-purple-400 peer-focus:text-sm">Your Message</label>
+                            </div>
+                            <button type="submit" class="w-full neon-glow bg-transparent py-4 rounded-lg text-xl orbitron font-bold hover:bg-green-400 hover:text-black transition-all duration-300">
+                                Send Ping
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="space-y-8">
+                        <div class="glass rounded-lg p-6">
+                            <h3 class="orbitron text-xl font-bold mb-4 text-cyan-400">Get In Touch</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-envelope text-green-400 text-xl"></i>
+                                    <span>sohamvyasasia@gmail.com</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fab fa-telegram text-purple-400 text-xl"></i>
+                                    <span>@cybersoham</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fab fa-discord text-cyan-400 text-xl"></i>
+                                    <span>cybersoham#1337</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass rounded-lg p-6">
+                            <h3 class="orbitron text-xl font-bold mb-4 text-purple-400">Social Links</h3>
+                            <div class="flex space-x-4">
+                                <a href="#" class="text-green-400 hover:text-white transition-colors text-2xl">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="#" class="text-purple-400 hover:text-white transition-colors text-2xl">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                <a href="#" class="text-cyan-400 hover:text-white transition-colors text-2xl">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="text-red-400 hover:text-white transition-colors text-2xl">
+                                    <i class="fab fa-youtube"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="glass rounded-lg p-6">
+                            <h3 class="orbitron text-xl font-bold mb-4 text-green-400">Location</h3>
+                            <p class="flex items-center space-x-3">
+                                <i class="fas fa-map-marker-alt text-green-400"></i>
+                                <span>Jodhpur, Rajasthan, India</span>
+                            </p>
+                        </div>
+
+                        <!-- Terminal Status -->
+                        <div class="terminal">
+                            <div class="terminal-line">
+                                <span class="text-purple-400">status@cybersoham:~$</span> whoami
+                            </div>
+                            <div class="terminal-line ml-4">
+                                > Available for collaboration
+                            </div>
+                            <div class="terminal-line mt-2">
+                                <span class="text-purple-400">status@cybersoham:~$</span> uptime
+                            </div>
+                            <div class="terminal-line ml-4">
+                                > Always ready to secure the digital world
+                            </div>
+                            <div class="terminal-line mt-2">
+                                <span class="text-purple-400">status@cybersoham:~$</span> <span class="cursor"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-green-400 py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-green-400">© 2024 cybersoham | Digital investigator in the shadows <span class="cursor"></span></p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-green-400 hover:text-purple-400 transition-colors">
+                        <i class="fab fa-github text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-green-400 hover:text-purple-400 transition-colors">
+                        <i class="fab fa-linkedin text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-green-400 hover:text-purple-400 transition-colors">
+                        <i class="fas fa-envelope text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-green-400 hover:text-purple-400 transition-colors">
+                        <i class="fab fa-twitter text-2xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Page Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(page => {
+                page.classList.remove('active');
+            });
+            // Show selected page
+            document.getElementById(pageId + '-page').classList.add('active');
+            
+            // Hide mobile menu
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        const rainDrops = [];
+
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
+        }
+
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0F3';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+
+        setInterval(draw, 30);
+
+        // Typewriter Effect
+        const phrases = [
+            'Cybersecurity Enthusiast',
+            'AI Developer',
+            'IITian',
+            'Digital Investigator',
+            'Threat Hunter',
+            'OSINT Specialist'
+        ];
+
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typewriterElement = document.getElementById('typewriter');
+
+        function typewriter() {
+            const currentPhrase = phrases[phraseIndex];
+
+            if (isDeleting) {
+                typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typewriter, typeSpeed);
+        }
+
+        // Start typewriter effect
+        typewriter();
+
+        // Game Functions
+        
+        // Password Cracker Game
+        function checkPassword() {
+            const guess = document.getElementById('password-guess').value.toLowerCase();
+            const result = document.getElementById('password-result');
+            
+            if (guess === 'hello') {
+                result.innerHTML = '<div class="text-green-400 mt-2">✓ Password cracked! Well done, hacker!</div>';
+            } else {
+                result.innerHTML = '<div class="text-red-400 mt-2">✗ Incorrect. Try a common 5-letter word.</div>';
+            }
+        }
+
+        // Network Scanner Game
+        function scanPorts() {
+            const results = document.getElementById('port-results');
+            const ports = [22, 80, 443, 8080, 3389];
+            const openPorts = [80, 443];
+            
+            results.innerHTML = '';
+            
+            ports.forEach((port, index) => {
+                setTimeout(() => {
+                    const status = openPorts.includes(port) ? 'OPEN' : 'CLOSED';
+                    const color = openPorts.includes(port) ? 'text-red-400' : 'text-green-400';
+                    results.innerHTML += `<div class="terminal-line ${color}">Port ${port}: ${status}</div>`;
+                }, index * 500);
+            });
+        }
+
+        // Cipher Decoder Game
+        function checkCipher() {
+            const guess = document.getElementById('cipher-guess').value.toLowerCase();
+            const result = document.getElementById('cipher-result');
+            
+            if (guess === 'hello world') {
+                result.innerHTML = '<div class="text-cyan-400 mt-2">✓ Message decoded successfully!</div>';
+            } else {
+                result.innerHTML = '<div class="text-red-400 mt-2">✗ Incorrect decoding. Try shifting each letter back by 3.</div>';
+            }
+        }
+
+        // Binary Converter Game
+        function checkBinary() {
+            const guess = document.getElementById('binary-guess').value.toLowerCase();
+            const result = document.getElementById('binary-result');
+            
+            if (guess === 'hello') {
+                result.innerHTML = '<div class="text-green-400 mt-2">✓ Binary converted correctly!</div>';
+            } else {
+                result.innerHTML = '<div class="text-red-400 mt-2">✗ Incorrect conversion. Each 8-bit sequence represents an ASCII character.</div>';
+            }
+        }
+
+        // SQL Injection Game
+        function checkSQL() {
+            const payload = document.getElementById('sql-payload').value.toLowerCase();
+            const result = document.getElementById('sql-result');
+            
+            if (payload.includes("' or '1'='1") || payload.includes("admin'--") || payload.includes("' or 1=1")) {
+                result.innerHTML = '<div style="color: #ff0080;" class="mt-2">✓ SQL injection successful! Admin access granted.</div>';
+            } else {
+                result.innerHTML = '<div class="text-red-400 mt-2">✗ Injection failed. Try bypassing the login validation.</div>';
+            }
+        }
+
+        // Memory Game Variables
+        let memorySequence = [];
+        let playerSequence = [];
+        let memoryLevel = 1;
+        let memoryScore = 0;
+        let isMemoryGameActive = false;
+
+        function startMemoryGame() {
+            memorySequence = [];
+            playerSequence = [];
+            memoryLevel = 1;
+            memoryScore = 0;
+            document.getElementById('memory-level').textContent = memoryLevel;
+            document.getElementById('memory-score').textContent = memoryScore;
+            generateMemorySequence();
+        }
+
+        function generateMemorySequence() {
+            memorySequence.push(Math.floor(Math.random() * 8));
+            showMemorySequence();
+        }
+
+        function showMemorySequence() {
+            isMemoryGameActive = false;
+            let index = 0;
+            
+            const interval = setInterval(() => {
+                if (index > 0) {
+                    document.querySelectorAll('.game-cell')[memorySequence[index - 1]].style.backgroundColor = '#1a1a1a';
+                }
+                
+                if (index < memorySequence.length) {
+                    document.querySelectorAll('.game-cell')[memorySequence[index]].style.backgroundColor = '#ff0040';
+                    index++;
+                } else {
+                    clearInterval(interval);
+                    isMemoryGameActive = true;
+                    playerSequence = [];
+                }
+            }, 600);
+        }
+
+        function memoryClick(cellIndex) {
+            if (!isMemoryGameActive) return;
+            
+            playerSequence.push(cellIndex);
+            
+            // Check if current click is correct
+            if (playerSequence[playerSequence.length - 1] !== memorySequence[playerSequence.length - 1]) {
+                alert('Game Over! Try again.');
+                startMemoryGame();
+                return;
+            }
+            
+            // Check if sequence is complete
+            if (playerSequence.length === memorySequence.length) {
+                memoryScore += memoryLevel * 10;
+                memoryLevel++;
+                document.getElementById('memory-level').textContent = memoryLevel;
+                document.getElementById('memory-score').textContent = memoryScore;
+                
+                setTimeout(() => {
+                    generateMemorySequence();
+                }, 1000);
+            }
+        }
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Contact Form Handler
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Message sent to the void... cybersoham will decode it soon!');
+        });
+
+        // Add floating labels animation
+        document.querySelectorAll('input, textarea, select').forEach(element => {
+            element.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+
+            element.addEventListener('blur', function() {
+                if (this.value === '') {
+                    this.parentElement.classList.remove('focused');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
